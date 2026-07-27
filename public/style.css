@@ -1,0 +1,207 @@
+:root {
+    /* Modern Color Palette */
+    --bg-color: #F9FAFB;        /* Light gray for the main background */
+    --card-bg: #FFFFFF;         /* Pure white for forms and blog cards */
+    --text-primary: #1F2937;    /* Dark slate for main text */
+    --text-secondary: #6B7280;  /* Lighter gray for secondary text */
+    --accent-color: #2563EB;    /* Modern blue for buttons and links */
+    --accent-hover: #1D4ED8;    /* Slightly darker blue for hover effects */
+}
+
+/* --- 1. Global Reset & Base Styles --- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* Uses a clean, modern system font */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* --- 2. Navigation Bar --- */
+header {
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Adds a very soft shadow underneath */
+    padding: 1rem 5%; /* Adds spacing inside the header */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav {
+    display: flex; /* Puts the logo and links on the same horizontal line */
+    justify-content: space-between; /* Pushes logo left and links right */
+    align-items: center; /* Centers them vertically */
+    max-width: 1200px;
+    margin: 0 auto; /* Centers the nav content on large screens */
+}
+
+nav h2 {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+}
+
+nav ul {
+    list-style: none; /* Removes the default bullet points */
+    display: flex;
+    gap: 2rem; /* Spaces out the links */
+}
+
+nav a {
+    text-decoration: none; /* Removes the underline from links */
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: color 0.3s ease; /* Makes the hover effect smooth */
+}
+
+nav a:hover {
+    color: var(--accent-hover);
+}
+
+/* --- 3. Main Content Layout --- */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;   /* centres the main block with space on top and bottom */
+    padding: 0 5%;
+    min-height: 70vh; /* Ensures the footer gets pushed down even if content is short */
+}
+
+main h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+main > section > p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+/* --- 4. Blog Cards --- */
+article {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px; /* Smooth, rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Soft shadow */
+    margin-bottom: 1.5rem;
+    border: 1px solid #E5E7EB; /* Very subtle border */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation setup */
+}
+
+/* Hover effect for the card */
+article:hover {
+    transform: translateY(-5px); /* Moves the card up slightly */
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1); /* Makes the shadow deeper */
+}
+
+article h3 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+article em {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 1rem;
+    font-style: normal;
+}
+
+article p {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+/* Read More Link */
+article a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+article a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* --- 5. Forms (Add Blog Page) --- */
+form {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #E5E7EB;
+    max-width: 800px; /* Prevents the form from stretching too wide on large screens */
+}
+
+form div {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+/* Styles both text inputs and the textarea */
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-family: inherit; /* Ensures it matches your system font */
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Highlight the input field when the user clicks inside it */
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); /* Soft blue glow */
+}
+
+/* --- 6. Buttons --- */
+button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: var(--accent-hover);
+}
+
+button:active {
+    transform: scale(0.98); /* Tiny click effect */
+}
+
+/* --- 7. Footer --- */
+hr {
+    border: none;
+    border-top: 1px solid #E5E7EB; /* Replaces the default bold line with a soft gray one */
+    margin-top: 2rem;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem 5%;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
