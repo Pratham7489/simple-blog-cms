@@ -21,9 +21,7 @@
   },
   "homepage": "https://github.com/Pratham7489/simple-blog-cms#readme",
   "dependencies": {
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "mongoose": "^9.8.1"
+    "express": "^5.2.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
