@@ -8,13 +8,11 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from the "public" folder
+app.use(express.static('public'));
+
 // An array as OUR TEMPORARY DATABASE
 let blogs = [];
-
-// Basic Test Route
-app.get('/', (req, res) => {
-  res.send('Blog Backend Server is Running!');
-});
 
 // --- POST Route: Create a new blog post ---
 app.post("/api/blogs", async (req, res) => {
