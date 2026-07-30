@@ -6,6 +6,31 @@ const contentInput = document.getElementById("content");
 
 // Check if the form exists on the current page before adding the listener
 if (blogForm) {
+  // --- Check if we are in Edit Mode ---
+  const urlParams = new URLSearchParams(window.location.search);
+  const editId = urlParams.get("edit"); // Grab id from the URL
+
+  if (editId) {
+    // Change the page header and the button text so the user knows they are editing
+    document.querySelector("h1").innerText = "Edit Blog Post";
+    blogForm.querySelector("button").innerText = "Update Post";
+
+    // Fetch the existing blogs to find the one we want to edit
+    fetch("/api/blogs")
+      .then((res) => res.json())
+      .then((blogs) => {
+        const blogToEdit = blogs.find((b) => b.id === editId);
+
+        if (blogToEdit) {
+          // Populate the input fields with the existing data
+          titleInput.value = blogToEdit.title;
+          authorInput.value = blogToEdit.author;
+          contentInput.value = blogToEdit.content;
+        }
+      })
+      .catch((err) => console.error("Error in fetching blog for edit:", err));
+  }
+
   // Add an event listener to the form for the 'submit' event
   blogForm.addEventListener("submit", function (event) {
     // Stop the page from reloading instantly
@@ -50,16 +75,44 @@ if (blogForm) {
       return; // This stops the rest of the code from running
     }
 
-    // If everything is perfect, simulate a successful submission
-    alert(
-      "Success! Your blog post has been validated and is ready to be published.",
-    );
-    console.log("Validated Data:", { titleValue, authorValue, contentValue });
+    // Prepare the data to send to the backend
+    const blogData = {
+      title: titleValue,
+      author: authorValue,
+      content: contentValue,
+    };
 
-    // Clear the form for the next entry
-    blogForm.reset();
+    // If editId exists, we are UPDATING (PUT)
+    if (editId) {
+      fetch(`/api/blogs/${editId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(blogData),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          alert("Blog updated successfully!");
+          window.location.href = "index.html"; // Send user back to Home page
+        })
+        .catch((err) => console.error("Error updating blog:", err));
+    }
+    // If no editId, we are CREATING (POST)
+    else {
+      fetch("/api/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(blogData),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          alert("Blog created successfully!");
+          window.location.href = "index.html"; // Send user back to Home page
+        })
+        .catch((err) => console.error("Error creating blog:", err));
+    }
   });
 }
+
 
 // Wait for the HTML to fully load before running the script
 document.addEventListener("DOMContentLoaded", fetchBlogs);
@@ -95,6 +148,9 @@ async function fetchBlogs() {
                 <h3>${blog.title}</h3>
                 <p><small>By: ${blog.author} | ${new Date(blog.createdAt).toLocaleDateString()}</small></p>
                 <p>${blog.content}</p>
+
+                <!-- The Edit Button with the URL Parameter -->
+                <a href="add-blog.html?edit=${blog.id}" style="display: inline-block; margin-top: 10px; color: white; background-color: #0056b3; padding: 5px 10px; text-decoration: none; border-radius: 4px;">Edit Post</a>
             `;
 
       // Add the new article to the page

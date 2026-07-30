@@ -50,6 +50,37 @@ app.get('/api/blogs', async (req, res) => {
     res.status(200).json(blogs);
 });
 
+// --- PUT Route: Edit an existing blog post ---
+app.put('/api/blogs/:id', (req, res) => {
+  // Grab the ID from the url parameter
+  const blogId = req.params.id;
+
+  // Grab the new data sent in the request body 
+  const { title, author, content } = req.body;
+
+  // Find the exact index of the blog in our array that matches this ID
+  const blogIndex = blogs.findIndex( blog => blog.id === blogId );
+
+  // If the blog isn't found, return a 404 console.error
+  if(blogIndex === -1) {
+    return res.status(404).json({ message: "Blog post not found" });
+  }
+
+  // Update the blog's data while keeping its original ID and creation Date
+  blogs[blogIndex] = {
+    ...blogs[blogIndex], // Keep existing data
+    title: title || blogs[blogIndex].title,
+    author: author || blogs[blogIndex].author,
+    content: content || blogs[blogIndex].content
+  };
+
+  // Send the updated blog back to the client
+  res.status(200).json({
+    message: "Blog updated successfully!",
+    blog: blogs[blogIndex]
+  });
+});
+
 // Start the Server
 app.listen(PORT, ()=> {
     console.log(`Express server on http://localhost:${PORT}`)
