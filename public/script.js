@@ -113,6 +113,36 @@ if (blogForm) {
   });
 }
 
+// --- Function to Delete a blog post ---
+async function deleteBlog(id) {
+  // Ask the user to confirm before deleting 
+  const confirmDelete = confirm("Are you sure you want to delete this blog post?");
+
+  // If they click "Cancle", stop the function right header
+  if(!confirmDelete) return;;
+
+  try {
+    // Call the DELETE API route
+    const response = await fetch(`/api/blogs/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (response.ok) {
+      // Show success message
+      alert("Blog deleted successfully!");
+
+      // Refresh the blogs on the screen automatically!
+      fetchBlogs();
+    } else {
+      alert("Failed to delete blog.")
+    }
+
+  } catch (error) {
+    console.error("Error deleting blog:", error);
+    alert("An error occurred while trying to delete.");
+  }
+} 
+
 
 // Wait for the HTML to fully load before running the script
 document.addEventListener("DOMContentLoaded", fetchBlogs);
@@ -149,8 +179,11 @@ async function fetchBlogs() {
                 <p><small>By: ${blog.author} | ${new Date(blog.createdAt).toLocaleDateString()}</small></p>
                 <p>${blog.content}</p>
 
-                <!-- The Edit Button with the URL Parameter -->
+                <!-- Edit Button -->
                 <a href="add-blog.html?edit=${blog.id}" style="display: inline-block; margin-top: 10px; color: white; background-color: #0056b3; padding: 5px 10px; text-decoration: none; border-radius: 4px;">Edit Post</a>
+
+                <!-- Delete Button -->
+                <button onclick="deleteBlog('${blog.id}')" style="display: inline-block; margin-top: 10px; color: white; background-color: #dc3545; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
             `;
 
       // Add the new article to the page

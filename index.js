@@ -81,6 +81,26 @@ app.put('/api/blogs/:id', (req, res) => {
   });
 });
 
+// --- DELETE Route: Remove a blog post ---
+app.delete("/api/blogs/:id", (req, res) => {
+  // Grab the ID from the URL parameter
+  const blogId = req.params.id;
+
+  // Find the exact index of the blog in our array
+  const blogIndex = blogs.findIndex(blog => blog.id === blogId );
+
+  // If the blog isn't found return a 404 error
+  if (blogIndex === -1) {
+    return res.status(404).json({ message: "Blog post not found!" });
+  }
+
+  // Remove that 1 item from the array using splice()
+  blogs.splice(blogIndex, 1);
+
+  // Send a success response back to the client
+  res.status(200).json({ message: "Blog deleted successfully!" });
+});
+
 // Start the Server
 app.listen(PORT, ()=> {
     console.log(`Express server on http://localhost:${PORT}`)
