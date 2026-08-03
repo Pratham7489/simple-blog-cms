@@ -1,60 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blog Management System - Add Blog</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    
+    <link rel="stylesheet" href="style.css?v=2" />
+  </head>
+  <body>
     <!-- Navigation Bar -->
-     <header>
-        <nav>
-            <h2>My Blog App</h2>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="add-blog.html">Add Blog</a></li>
-            </ul>
-        </nav>
-     </header>
+    <header>
+      <nav>
+        <h2>My Blog App</h2>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="add-blog.html">Add Blog</a></li>
+        </ul>
+      </nav>
+    </header>
 
-     <!-- Main content -->
-      <main>
-        <section>
-            <h1>Create a New Blog Post</h1>
+    <!-- Main content -->
+    <main>
+      <section>
+        <h1>Create a New Blog Post</h1>
 
-            <!-- Blog Submission Form -->
-            <form id="add-blog-form" action="/submit-blog" method="POST">
-                <div>
-                    <label for="title">Blog Title:</label><br>
-                    <input type="text" id="title" name="title" required placeholder="Post Title">
-                </div>
-                <br>
-                <div>
-                    <label for="author">Author:</label><br>
-                    <input type="text" id="author" name="author" required placeholder="Your name">
-                </div>
-                <br>
-                <div>
-                    <label for="content">Blog Content:</label><br>
-                    <textarea id="content" name="content" rows="10" cols="50" required placeholder="write post here..."></textarea>
-                </div>
-                <br>
+        <!-- Blog Submission Form -->
+        <form id="add-blog-form" action="/submit-blog" method="POST">
+          <div>
+            <label for="title">Blog Title:</label><br />
+            <input
+              type="text"
+              id="title"
+              name="title"
+              required
+              placeholder="Post Title"
+            />
+          </div>
+          <div>
+            <label for="author">Author:</label><br />
+            <input
+              type="text"
+              id="author"
+              name="author"
+              required
+              placeholder="Your name"
+            />
+          </div>
+          <div>
+            <label for="content">Blog Content:</label><br />
+            <textarea
+              id="content"
+              name="content"
+              rows="8"
+              cols="50"
+              required
+              placeholder="write post here..."
+            ></textarea>
+          </div>
 
-                <button type="submit">Publish Blog</button>
-            </form>
-        </section>
-      </main>
+          <button type="submit">Publish Blog</button>
+        </form>
+      </section>
+    </main>
 
-      <hr>
+    <hr />
 
-      <!-- Footer -->
-       <footer>
-        <p>&copy; 2026 Blog Management System. All rights reserved.</p>
-        <p>Contact us at info@blogsystem.com</p>
-       </footer>
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2026 Blog Management System. All rights reserved.</p>
+      <p>Contact us at info@blogsystem.com</p>
+    </footer>
 
-       <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

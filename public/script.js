@@ -1,3 +1,41 @@
+// --- Utility Function: Show Flash Message ---
+function showFlashMessage(message, type = "success") {
+  // Create a new div element for the message
+  const flashDiv = document.createElement("div");
+  flashDiv.innerText = message;
+
+  // Style it to look like a modern popup notification
+  flashDiv.style.position = "fixed";
+  flashDiv.style.top = "20px";
+  flashDiv.style.right = "20px";
+  flashDiv.style.padding = "15px 25px";
+  flashDiv.style.borderRadius = "5px";
+  flashDiv.style.color = "white";
+  flashDiv.style.fontWeight = "bold";
+  flashDiv.style.zIndex = "1000"; // Make sure it sits on top of everything
+  flashDiv.style.boxShadow = "0 4px 6px rgba(0,0,0,0.1)";
+  flashDiv.style.transition = "opacity 0.5s ease-in-out";
+
+  // Set the background color based on success or error
+  if (type === "success") {
+    flashDiv.style.backgroundColor = "#5de67d"; // Green
+  } else if (type === "error") {
+    flashDiv.style.backgroundColor = "#ef495a"; // Red
+  }
+
+  // Add the div to the webpage
+  document.body.appendChild(flashDiv);
+
+  // Automatically fade it out and remove it after 3 seconds
+  setTimeout(() => {
+    flashDiv.style.opacity = "0";
+    setTimeout(() => flashDiv.remove(), 500); // Wait for fade out to finish before removing
+  }, 3000);
+}
+
+// --- Global Constants ---
+const API_URL = "/api/blogs";
+
 // Grab the form and the input elements from the dom
 const blogForm = document.getElementById("add-blog-form");
 const titleInput = document.getElementById("title");
@@ -16,7 +54,7 @@ if (blogForm) {
     blogForm.querySelector("button").innerText = "Update Post";
 
     // Fetch the existing blogs to find the one we want to edit
-    fetch("/api/blogs")
+    fetch(API_URL)
       .then((res) => res.json())
       .then((blogs) => {
         const blogToEdit = blogs.find((b) => b.id === editId);
@@ -42,9 +80,9 @@ if (blogForm) {
     const contentValue = contentInput.value.trim();
 
     // Reset borders back to default (in case they fixed a previous error)
-    titleInput.style.borderColor = "#D1D5DB";
-    authorInput.style.borderColor = "#D1D5DB";
-    contentInput.style.borderColor = "#D1D5DB";
+    // titleInput.style.borderColor = "#D1D5DB";
+    // authorInput.style.borderColor = "#D1D5DB";
+    // contentInput.style.borderColor = "#D1D5DB";
 
     let isValid = true;
     let errorMessage = "";
@@ -71,8 +109,8 @@ if (blogForm) {
     // Decide what happens based on the validation
     if (!isValid) {
       // If data is bad, show the errors and stop
-      alert("Please fix the following errors:\n" + errorMessage);
-      return; // This stops the rest of the code from running
+      showFlashMessage(errorMessage, "error");
+      return;
     }
 
     // Prepare the data to send to the backend
@@ -84,65 +122,75 @@ if (blogForm) {
 
     // If editId exists, we are UPDATING (PUT)
     if (editId) {
-      fetch(`/api/blogs/${editId}`, {
+      fetch(`${API_URL}/${editId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(blogData),
       })
         .then((res) => res.json())
         .then((data) => {
-          alert("Blog updated successfully!");
-          window.location.href = "index.html"; // Send user back to Home page
+          showFlashMessage("Blog updated successfully!", "success");
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1500); // Wait 1.5 seconds before redirecting
         })
-        .catch((err) => console.error("Error updating blog:", err));
+        .catch((err) => {
+          console.error("Error updating blog:", err);
+          showFlashMessage("Error updating blog.", "error");
+        });
     }
+
     // If no editId, we are CREATING (POST)
     else {
-      fetch("/api/blogs", {
+      fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(blogData),
       })
         .then((res) => res.json())
         .then((data) => {
-          alert("Blog created successfully!");
-          window.location.href = "index.html"; // Send user back to Home page
+          showFlashMessage("Blog created successfully!", "success");
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1500); // Wait 1.5 seconds before redirecting
         })
-        .catch((err) => console.error("Error creating blog:", err));
+        .catch((err) => {
+          console.error("Error creating blog:", err);
+          showFlashMessage("Error creating blog.", "error");
+        });
     }
   });
 }
 
 // --- Function to Delete a blog post ---
 async function deleteBlog(id) {
-  // Ask the user to confirm before deleting 
-  const confirmDelete = confirm("Are you sure you want to delete this blog post?");
+  // Ask the user to confirm before deleting
+  const confirmDelete = confirm(
+    "Are you sure you want to delete this blog post?",
+  );
 
   // If they click "Cancle", stop the function right header
-  if(!confirmDelete) return;;
+  if (!confirmDelete) return;
 
   try {
     // Call the DELETE API route
-    const response = await fetch(`/api/blogs/${id}`, {
-      method: 'DELETE'
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
     });
 
     if (response.ok) {
       // Show success message
-      alert("Blog deleted successfully!");
-
+      showFlashMessage("Blog deleted successfully!", "success");
       // Refresh the blogs on the screen automatically!
       fetchBlogs();
     } else {
-      alert("Failed to delete blog.")
+      showFlashMessage("Failed to delete blog.", "error");
     }
-
   } catch (error) {
     console.error("Error deleting blog:", error);
     alert("An error occurred while trying to delete.");
   }
-} 
-
+}
 
 // Wait for the HTML to fully load before running the script
 document.addEventListener("DOMContentLoaded", fetchBlogs);
@@ -150,11 +198,12 @@ document.addEventListener("DOMContentLoaded", fetchBlogs);
 async function fetchBlogs() {
   try {
     // Call our backend API
-    const response = await fetch("/api/blogs");
+    const response = await fetch(API_URL);
     const blogs = await response.json();
 
     // Find the container in our HTML
     const container = document.getElementById("blogs-container");
+    if (!container) return;
 
     // Clear the "Loading blogs..." text
     container.innerHTML = "";
@@ -170,21 +219,21 @@ async function fetchBlogs() {
     blogs.forEach((blog) => {
       const article = document.createElement("article");
       // Adding a bottom border and margin for styling
-      article.style.borderBottom = "1px solid #ccc";
-      article.style.marginBottom = "20px";
-      article.style.paddingBottom = "10px";
+      // article.style.borderBottom = "1px solid #ccc";
+      // article.style.marginBottom = "20px";
+      // article.style.paddingBottom = "10px";
 
       article.innerHTML = `
                 <h3>${blog.title}</h3>
-                <p><small>By: ${blog.author} | ${new Date(blog.createdAt).toLocaleDateString()}</small></p>
+                <p><small>By: <i>${blog.author}</i> | ${new Date(blog.createdAt).toLocaleDateString()}</small></p>
                 <p>${blog.content}</p>
 
                 <!-- Edit Button -->
-                <a href="add-blog.html?edit=${blog.id}" style="display: inline-block; margin-top: 10px; color: white; background-color: #0056b3; padding: 5px 10px; text-decoration: none; border-radius: 4px;">Edit Post</a>
+                <a href="add-blog.html?edit=${blog.id}" class="edit-btn">Edit</a>
 
                 <!-- Delete Button -->
-                <button onclick="deleteBlog('${blog.id}')" style="display: inline-block; margin-top: 10px; color: white; background-color: #dc3545; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
-            `;
+                <button onclick="deleteBlog('${blog.id}')" class="delete-btn">Delete</button>
+          `;
 
       // Add the new article to the page
       container.appendChild(article);
